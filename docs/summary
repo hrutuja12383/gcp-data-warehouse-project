@@ -1,0 +1,132 @@
+**Project Explanation Script – End-to-End Data Warehouse on BigQuery**
+
+I worked on an end-to-end data warehouse project using Google BigQuery where I implemented a multi-layered architecture consisting of Bronze, Silver, and Gold layers.
+
+The goal of this project was to ingest raw data from multiple source systems, clean and standardize it, and finally transform it into an analytics-ready format using a star schema.
+
+---
+
+**1. Bronze Layer – Raw Data Ingestion**
+
+In the Bronze layer, I ingested raw data from different source systems like CRM and ERP.
+The data was loaded into BigQuery tables without applying any transformations.
+
+This layer acts as a staging area where:
+
+* Data is stored in its original format
+* No cleaning or validation is applied
+* It serves as a backup of source data
+
+I used Python with the BigQuery client library to:
+
+* Create datasets dynamically
+* Load CSV files into BigQuery tables
+* Automate the ingestion process
+
+---
+
+**2. Silver Layer – Data Cleaning & Transformation**
+
+In the Silver layer, I performed data cleaning and standardization.
+
+Key transformations I implemented:
+
+* Removed duplicate records using `ROW_NUMBER()` window function
+* Trimmed unwanted spaces using `TRIM()`
+* Handled null values using `COALESCE()`
+* Standardized categorical values (e.g., Gender: M/F → Male/Female)
+* Converted incorrect data types using `SAFE_CAST()`
+* Validated and fixed date formats using `PARSE_DATE()`
+* Recalculated incorrect metrics like sales and price
+* Removed invalid records such as future dates
+
+For example:
+
+* In customer data, I kept only the latest record per customer
+* In product data, I implemented slowly changing dimension logic using `LEAD()` to derive end dates
+* In sales data, I corrected invalid sales and pricing values
+
+This layer ensures data is clean, consistent, and reliable.
+
+---
+
+**3. Gold Layer – Star Schema (Analytics Layer)**
+
+In the Gold layer, I designed a star schema for reporting.
+
+I created:
+
+* **Dimension Tables (Views)**
+
+  * `dim_customers` → customer details like name, gender, country
+  * `dim_products` → product details like category, cost, product line
+
+* **Fact Table (View)**
+
+  * `fact_sales` → transactional data like sales amount, quantity, price
+
+Key design decisions:
+
+* Used surrogate keys with `ROW_NUMBER()`
+* Joined multiple sources to enrich dimension tables
+* Used views instead of tables for real-time data access
+* Filtered only active records (e.g., current products)
+
+---
+
+**4. Data Modeling Approach**
+
+I used a **Star Schema**, where:
+
+* Fact table stores measurable metrics
+* Dimension tables store descriptive attributes
+
+This improves:
+
+* Query performance
+* Data readability
+* BI tool integration
+
+---
+
+**5. Validation & Data Quality Checks**
+
+I implemented validation checks such as:
+
+* Row count verification
+* Duplicate detection
+* Null value checks
+* Data consistency checks between columns
+
+---
+
+**6. Tools & Technologies Used**
+
+* Google BigQuery (Data Warehouse)
+* Python (Data Ingestion & Automation)
+* SQL (Transformation & Modeling)
+
+---
+
+**7. Outcome**
+
+This project resulted in a fully functional data warehouse that:
+
+* Handles raw data ingestion
+* Cleans and standardizes data
+* Provides analytics-ready datasets
+
+It can be directly connected to BI tools for dashboards and reporting.
+
+---
+
+**Conclusion**
+
+This project helped me understand real-world data engineering concepts like:
+
+* ETL pipelines
+* Data cleaning strategies
+* Star schema design
+* Data validation techniques
+
+It closely simulates how modern cloud data warehouses are built and used in production environments.
